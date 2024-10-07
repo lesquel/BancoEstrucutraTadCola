@@ -3,14 +3,14 @@
 #include <iostream>
 #include "person.hpp"
 
-class Cola
+class Queue
 {
 private:
     Person *arr;
     int first, last, capacity, size;
 
 public:
-    Cola(int cap)
+    Queue(int cap)
     {
         capacity = cap;
         arr = new Person[capacity];

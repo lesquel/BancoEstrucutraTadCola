@@ -1,30 +1,52 @@
 #pragma once
 
-#include "person.hpp"
+#include "queue.hpp"
+#include "thread"
+#include "chrono"
+#include <mutex>
 
-class Caja
+class Cashier
 {
 private:
-    Person person;
-    int number;
+    int cashierId;
     bool occupied;
-    int waitingTime;
+    int serviceTime;
     bool priority;
 
 public:
-    Caja(Person person, int number, bool occupied, int waitingTime, bool priority)
+    Cashier(int cashierId, bool occupied, int waitingTime, bool priority)
     {
-        this->person = person;
-        this->number = number;
+        this->cashierId = cashierId;
         this->occupied = occupied;
-        this->waitingTime = waitingTime;
+        this->serviceTime = waitingTime;
         this->priority = priority;
     }
 
-    Person getPerson() const { return person; }
-    int getnumber() const { return number; }
-    bool getoccupied() const { return occupied; }
-    int getTiempoDeEspera() const { return waitingTime; }
-    bool getpriority() const { return priority; }
-};
+    int getnumber() const { return cashierId; }
+    bool isOccupied() const { return occupied; }
+    int getServiceTime() const { return serviceTime; }
+    bool getPriority() const { return priority; }
 
+
+    void serveClient(Queue &cola, std::mutex &queueMutex)
+    {
+        std::string clientName;
+        {
+            std::lock_guard<std::mutex> lock(queueMutex);
+
+            if (cola.isEmpty())
+            {
+                return;
+            }
+
+            clientName = cola.dequeue().getName();
+            occupied = true;
+            std::cout << "Atendiendo al cliente " << clientName << " en la caja " << cashierId << std::endl;
+        }
+
+        std::this_thread::sleep_for(std::chrono::seconds(serviceTime));
+
+        std::cout << "--- El cliente " << clientName << " ha sido atendido en la caja " << cashierId << std::endl;
+        occupied = false;
+    }
+};
