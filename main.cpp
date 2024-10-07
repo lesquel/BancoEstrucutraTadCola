@@ -13,15 +13,24 @@ private:
     int edad;
     string direccion;
     bool prioridad;
-
+    bool atendido;
 public:
-    Persona(string n = "", int e = 0, string d = "") : nombre(n), edad(e), direccion(d) {}
+    Persona(string n = "", int e = 0, string d = "", bool p = false)
+    {
+        nombre = n;
+        edad = e;
+        direccion = d;
+        prioridad = p;
+        atendido = false;
+    }
 
     string getNombre() const { return nombre; }
     int getEdad() const { return edad; }
     string getDireccion() const { return direccion; }
+    bool getPrioridad() const { return prioridad; }
+    bool getAtendido() const { return atendido; }
+    void setAtendido(bool a) { atendido = a; }
 };
-class Persona; // Forward declaration
 
 class Caja
 {
@@ -33,11 +42,11 @@ private:
     bool prioridad;
 
 public:
-    Caja(Persona p, int n, bool o, int t, bool pr)
+    Caja(Persona p, int n, int t, bool pr)
     {
         persona = p;
         numero = n;
-        ocupado = o;
+        ocupado = false;
         tiempoDeEspera = t;
         prioridad = pr;
     }
@@ -47,6 +56,14 @@ public:
     bool getOcupado() const { return ocupado; }
     int getTiempoDeEspera() const { return tiempoDeEspera; }
     bool getPrioridad() const { return prioridad; }
+    void Tabajo(Persona p)
+    {
+        ocupado = true;
+        cout << "Se esta atendiendo a " << p.getNombre() << " en la caja " << numero << endl;
+        sleep_for(seconds(tiempoDeEspera));
+        ocupado = false;
+        cout << "Se ha terminado el trabajo en la caja " << numero << endl;
+    }
 };
 
 class Cola
@@ -126,6 +143,42 @@ public:
         return last - first + 1;
     }
 };
+
+void Controlador(Cola &cola, Caja caja[2])
+{
+    while (!cola.isEmpty())
+    {
+        Persona person = cola.dequeue();
+
+        while (!person.getAtendido())
+        {
+            if (!person.getPrioridad())
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    if (!caja[i].getOcupado() && !caja[i].getPrioridad())
+                    {
+                        caja[i].Tabajo(person);
+                        person.setAtendido(true);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    if (!caja[i].getOcupado())
+                    {
+                        caja[i].Tabajo(person);
+                        person.setAtendido(true);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
 
 int main()
 {
