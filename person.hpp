@@ -1,22 +1,32 @@
 #pragma once
 
 #include <iostream>
+#include <string>
+using namespace std;
 
-class Person
+
+class Persona
 {
 private:
-    std::string name;
-    // int edad;
-    // std::string direccion;
-    bool priority;
-
+    string nombre;
+    int edad;
+    string direccion;
+    bool prioridad;
+    bool atendido;
 public:
-    Person(std::string name = "") {
-        this->name = name;
+    Persona(string n = "", int e = 0, string d = "", bool p = false)
+    {
+        nombre = n;
+        edad = e;
+        direccion = d;
+        prioridad = p;
+        atendido = false;
     }
 
-    std::string getName() const { return name; }
-    // int getEdad() const { return edad; }
-    // std::string getDireccion() const { return direccion; }
+    string getNombre() const { return nombre; }
+    int getEdad() const { return edad; }
+    string getDireccion() const { return direccion; }
+    bool getPrioridad() const { return prioridad; }
+    bool getAtendido() const { return atendido; }
+    void setAtendido(bool a) { atendido = a; }
 };
-
