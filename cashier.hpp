@@ -19,10 +19,10 @@ private:
 public:
 
 
-    Cashier(int cashierId=0, bool occupied=false, int waitingTime=0, bool priority=false)
+    Cashier(int cashierId=0, int waitingTime=0, bool priority=false)
     {
         this->cashierId = cashierId;
-        this->occupied = occupied;
+        this->occupied = false;
         this->serviceTime = waitingTime;
         this->priority = priority;
     }

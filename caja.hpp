@@ -2,41 +2,52 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <mutex>
 #include "person.hpp"
 using namespace std;
 using namespace std::this_thread;
 
-
-class Caja
+class Cashier
 {
 private:
-    Persona persona;
+    Person persona;
     int numero;
     bool ocupado;
     int tiempoDeEspera;
     bool prioridad;
+    mutex mtx; // Mutex para controlar el acceso concurrente
 
 public:
-    Caja(Persona p, int n, int t, bool pr)
+    Cashier(int n, int t, bool pr)
     {
-        persona = p;
         numero = n;
         ocupado = false;
         tiempoDeEspera = t;
         prioridad = pr;
     }
 
-    Persona getPersona() const { return persona; }
+    Person getPersona() const { return persona; }
     int getNumero() const { return numero; }
     bool getOcupado() const { return ocupado; }
     int getTiempoDeEspera() const { return tiempoDeEspera; }
     bool getPrioridad() const { return prioridad; }
-    void Tabajo(Persona p)
+    void setOcupado(bool estado) { ocupado = estado; }
+
+    void Trabajo(Person p)
     {
-        ocupado = true;
-        cout << "Se esta atendiendo a " << p.getNombre() << " en la caja " << numero << endl;
-        sleep_for(seconds(tiempoDeEspera));
-        ocupado = false;
+        // Bloqueo del mutex para acceso seguro
+        lock_guard<mutex> lock(mtx);
+        setOcupado(true);
+        cout << "Se esta atendiendo a " << p.getName() << " en la caja " << numero << endl;
+        sleep_for(chrono::seconds(tiempoDeEspera));
         cout << "Se ha terminado el trabajo en la caja " << numero << endl;
+        setOcupado(false);
+    }
+
+    // Método para atender a un cliente en un hilo separado
+    void atenderCliente(Person p)
+    {
+        thread t(&Cashier::Trabajo, this, p);
+        t.detach(); // Permite que el hilo se ejecute independientemente
     }
 };
