@@ -4,16 +4,17 @@
 #include <string>
 using namespace std;
 
+enum typeOperation
+{
+    DEPOSITO,
+    RETIRO
+};
 
 class Person
 {
 private:
-    string nombre;
-    int edad;
-    string direccion;
-    bool prioridad;
-    bool atendido;
     std::string name;
+
     bool priority;
 
 public:
