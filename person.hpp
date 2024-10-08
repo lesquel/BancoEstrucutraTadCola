@@ -6,8 +6,6 @@ class Person
 {
 private:
     std::string name;
-    // int edad;
-    // std::string direccion;
     bool priority;
 
 public:
@@ -16,7 +14,5 @@ public:
     }
 
     std::string getName() const { return name; }
-    // int getEdad() const { return edad; }
-    // std::string getDireccion() const { return direccion; }
-};
 
+};

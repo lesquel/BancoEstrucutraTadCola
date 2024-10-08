@@ -1,9 +1,11 @@
 #pragma once
 
-#include "queue.hpp"
+#include <iostream>
+#include <mutex>
 #include "thread"
 #include "chrono"
-#include <mutex>
+
+#include "queue.hpp"
 
 class Cashier
 {
@@ -12,9 +14,12 @@ private:
     bool occupied;
     int serviceTime;
     bool priority;
+    std::string operation;
 
 public:
-    Cashier(int cashierId, bool occupied, int waitingTime, bool priority)
+
+
+    Cashier(int cashierId=0, bool occupied=false, int waitingTime=0, bool priority=false)
     {
         this->cashierId = cashierId;
         this->occupied = occupied;

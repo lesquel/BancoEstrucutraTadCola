@@ -10,9 +10,9 @@ private:
     int first, last, capacity, size;
 
 public:
-    Queue(int cap)
+    Queue(int capacity=0)
     {
-        capacity = cap;
+        capacity = capacity;
         arr = new Person[capacity];
         first = -1;
         last = -1;
@@ -50,12 +50,13 @@ public:
 
     Person dequeue()
     {
+        Person person;
         if (isEmpty())
         {
             std::cout << "Cola vacia" << std::endl;
-            return Person();
+            return person;
         }
-        Person person = arr[first];
+        person = arr[first];
         first = (first + 1) % capacity;
         size--;
         if (isEmpty())
