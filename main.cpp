@@ -2,73 +2,77 @@
 #include <string>
 #include <thread>
 #include <chrono>
-
 using namespace std;
 
-
+#include "bank.hpp"
 #include "person.hpp"
-<<<<<<< HEAD
-#include "cashier.hpp"
-=======
-#include "caja.hpp"
-#include "queue.hpp"
 
-void Desicion(Person &person, Cashier (&caja)[2])
-{
-    if (!person.getPrioridad()) // Si la persona no tiene prioridad
-    {
-        for (int i = 0; i < 2; i++)
-        {
-            if (!caja[i].getOcupado() && !caja[i].getPrioridad()) // Caja sin prioridad
-            {
-                
-                caja[i].Trabajo(person); // Asumimos que la función es Trabajo
-                person.setAtendido(true);
-                break;
-            }
-        }
-    }
-    else // Si la persona tiene prioridad
-    {
-        for (int i = 0; i < 2; i++)
-        {
-            if (!caja[i].getOcupado()) // Caja ocupada o no
-            {
-                caja[i].Trabajo(person); // Asumimos que la función es Trabajo
-                person.setAtendido(true);
-                break;
-            }
-        }
-    }
+void showMenu() {
+    cout << "====================================" << endl;
+    cout << "           Banco Pichincha          " << endl;
+    cout << "====================================" << endl;
+    cout << "1. Add Client" << endl;
+    cout << "2. Start Service" << endl;
+    cout << "3. Exit" << endl;
+    cout << "Please select an option: ";
 }
 
-void Controlador(Queue &cola, Cashier (&caja)[2])
-{
-    while (!cola.isEmpty())
-    {
-        Person person = cola.dequeue(); // Consistente con la clase Person
+int main() {
+    Bank bank("Banco Pichincha");
+    int option;
 
-        while (!person.getAtendido()) // Si la persona no ha sido atendida
-        {
-            Desicion(person, caja);
+    while (true) {
+        showMenu();
+        cin >> option;
+
+        if (option == 1) {
+            string name;
+            int operation;
+            bool isElder;
+
+            // Get client information
+            cout << "Enter client name: ";
+            cin >> name;
+
+            cout << "Enter operation (0 for DEPOSIT, 1 for WITHDRAWAL): ";
+            cin >> operation;
+
+            cout << "Is the client elder? (0 for No, 1 for Yes): ";
+            cin >> isElder;
+
+            // Create the client and add to the bank
+            Person newClient(name, static_cast<typeOperation>(operation), isElder);
+            bank.addClient(newClient);
+
+            cout << "Client " << name << " added successfully!" << endl;
+
+        } else if (option == 2) {
+            bank.startService();
+        } else if (option == 3) {
+            cout << "Exiting the application. Thank you!" << endl;
+            break;
+        } else {
+            cout << "Invalid option. Please try again." << endl;
         }
     }
-}
->>>>>>> 8e5f62c210fe0c7a3978bd5bd1b73758a13c1ab7
 
-int main()
-{
-    // creamos la cola de personas
-    Queue cola(10);
-    cola.enqueue(Person("Mike", false));
-    cola.enqueue(Person("Bryan", false));
-    cola.enqueue(Person("Jandry", false));
-    cola.enqueue(Person("Juan", false));
-    cola.enqueue(Person("Pepe", false));
-    // creamos las cajas
-    Cashier caja[2] = {Cashier(0, 4, false), Cashier(1, 2, true)};
-
-    Controlador(cola, caja);
     return 0;
 }
 
+
+
+
+    // Bank bank("Banco Pichincha");
+    // Person person1("Juan", DEPOSIT, false);
+    // Person person2("Maria", WITHDRAWAL, true);
+    // Person person3("Pedro", WITHDRAWAL, true);
+    // Person person4("Ana", DEPOSIT, true);
+    // Person person5("Luisa", DEPOSIT, false);
+    // Person person6("Robert", DEPOSIT, true);
+    // bank.addClient(person1);
+    // bank.addClient(person2);
+    // bank.addClient(person3);
+    // bank.addClient(person4);
+    // bank.addClient(person5);
+    // bank.addClient(person6);
+    // bank.startService();
