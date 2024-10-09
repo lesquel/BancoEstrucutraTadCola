@@ -29,15 +29,6 @@ public:
         // bankTellers.emplace_back(BankTeller("Especial222", DEPOSIT));     // Cajero de deposito y retiro
     }
 
-    BankQueue getNormalQueue()
-    {
-        return normalQueue;
-    }
-    BankQueue getPrioritaryQueue()
-    {
-        return prioritaryQueue;
-    }
-
     void addClient(Person client)
     {   
         if (client.isElder())

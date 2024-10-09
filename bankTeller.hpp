@@ -23,7 +23,6 @@ public:
         this->operation = operation;
     }
 
-    std::string getnumber() const { return banTellerName; }
     int getServiceTime() const { return operation; }
 
     void serveClient(BankQueue &cola, std::mutex &queueMutex)
