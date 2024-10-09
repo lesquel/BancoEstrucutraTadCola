@@ -1,5 +1,5 @@
 #pragma once
-
+// Enumeration para definir el tipo de operación (DEPOSITO, RETIRO, BOTH)
 enum typeOperation
 {
     NONE = 0,
