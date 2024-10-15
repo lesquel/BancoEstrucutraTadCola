@@ -11,17 +11,17 @@
 class BankTeller
 {
 private:
-    std::string banTellerName;      // Nombre del cajero
-    typeOperation operation;        // Tipo de operación que realiza el cajero (depósito, retiro o ambos)
-    int serviceTime = 0;            // Tiempo total de servicio (se incrementa con cada transacción)
+    std::string banTellerName; // Nombre del cajero
+    typeOperation operation;   // Tipo de operación que realiza el cajero (depósito, retiro o ambos)
+    int serviceTime = 0;       // Tiempo total de servicio (se incrementa con cada transacción)
 
 public:
     /**
      * Constructor de la clase BankTeller.
-     * 
+     *
      * @param banTellerName Nombre del cajero.
      * @param operation Tipo de operación que realiza el cajero (definido por typeOperation).
-     * 
+     *
      * Este constructor inicializa un cajero con un nombre y el tipo de operación que maneja.
      */
     BankTeller(std::string banTellerName, typeOperation operation)
@@ -30,33 +30,20 @@ public:
         this->operation = operation;
     }
 
-<<<<<<< HEAD
-=======
-    /**
-     * Devuelve el nombre del cajero.
-     * 
-     * @return std::string Nombre del cajero.
-     */
-    std::string getnumber() const { return banTellerName; }
+    std::string getName() const { return banTellerName; }
 
-    /**
-     * Devuelve el tiempo de servicio asociado al tipo de operación.
-     * 
-     * @return int Tiempo de servicio en segundos.
-     */
->>>>>>> 4681fa29f86f199a1cd34b4bc5ef7d435f8c3e4e
     int getServiceTime() const { return operation; }
 
     /**
      * Sirve a un cliente de la cola.
-     * 
+     *
      * @param cola Cola de clientes que se procesará (BankQueue).
      * @param queueMutex Mutex para garantizar acceso seguro a la cola.
-     * 
+     *
      * Este método intenta atender a un cliente de la cola pasada como referencia.
      * Si la cola no está vacía, extrae un cliente, lo atiende y muestra el tiempo de servicio.
      * Si el cliente es mayor, se indica que ha sido atendido prioritariamente.
-     * 
+     *
      * Luego, se simula el tiempo de transacción con `std::this_thread::sleep_for()`, basado
      * en el tipo de operación del cajero.
      */
@@ -89,16 +76,16 @@ public:
             }
 
             // Mostrar tiempos de espera y transacción
-            std::cout << "Tiempo de espera: " << serviceTime << ", tiempo de transacción: " << getServiceTime() << std::endl;
+
+            std::cout << "Tiempo de espera: " << serviceTime << ", tiempo de transaccion: " << getServiceTime() << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(operation));
+            serviceTime += getServiceTime();
         }
 
         // Actualizar el tiempo total de servicio del cajero
-        serviceTime += getServiceTime();
 
         // Separador visual en la consola
-        std::cout << "__________________________________________" << std::endl;
-
-        // Simular el tiempo de operación (depósito o retiro) del cajero
-        std::this_thread::sleep_for(std::chrono::seconds(operation));
+        std::cout << "______________________________________________________" << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Ajustar según sea necesario
     }
 };

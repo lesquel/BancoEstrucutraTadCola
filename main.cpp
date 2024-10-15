@@ -5,7 +5,8 @@ using namespace std;
 #include "bank.hpp"
 #include "person.hpp"
 
-void showMenu() {
+void showMenu()
+{
     cout << "====================================" << endl;
     cout << "           Banco Pichincha          " << endl;
     cout << "====================================" << endl;
@@ -15,7 +16,8 @@ void showMenu() {
     cout << "Please select an option: ";
 }
 
-int main() {
+int main()
+{
     // Bank bank("Banco Pichincha");
     // int option;
 
@@ -55,6 +57,7 @@ int main() {
     // }
 
     Bank bank("Banco Pichincha");
+
     Person person1("Juan", DEPOSIT, false);
     Person person2("Maria", WITHDRAWAL, true);
     Person person3("Pedro", WITHDRAWAL, true);
@@ -62,18 +65,42 @@ int main() {
     Person person5("Luisa", DEPOSIT, false);
     Person person6("Robert", DEPOSIT, true);
     Person person7("Albert", DEPOSIT, true);
+    Person person8("Jesus", DEPOSIT, false);
+    Person person9("Carlos", WITHDRAWAL, false);
+    Person person10("Diana", DEPOSIT, false);
+    Person person11("Elena", WITHDRAWAL, false);
+    Person person12("Fernando", DEPOSIT, false);
+    Person person13("Gabriela", WITHDRAWAL, false);
+    Person person14("Hugo", DEPOSIT, false);
+    Person person15("Irene", WITHDRAWAL, false);
+    Person person16("Jorge", WITHDRAWAL, false);
+    Person person17("Karen", DEPOSIT, false);
+    Person person18("Leonardo", WITHDRAWAL, false);
+    Person person19("Marta", DEPOSIT, false);
+    Person person20("Nicolas", DEPOSIT, false);
+
     bank.addClient(person1);
     bank.addClient(person2);
     bank.addClient(person3);
     bank.addClient(person4);
     bank.addClient(person5);
     bank.addClient(person6);
-    bank.addClient(person7);
+        bank.addClient(person7);
+        bank.addClient(person8);
+        bank.addClient(person9);
+        bank.addClient(person10);
+        bank.addClient(person11);
+        bank.addClient(person12);
+        bank.addClient(person13);
+        bank.addClient(person14);
+        bank.addClient(person15);
+        bank.addClient(person16);
+        bank.addClient(person17);
+        bank.addClient(person18);
+        bank.addClient(person19);
+        bank.addClient(person20);
+
     bank.startService();
 
     return 0;
 }
-
-
-
-

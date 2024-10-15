@@ -2,8 +2,8 @@
 // Enumeration para definir el tipo de operación (DEPOSITO, RETIRO, BOTH)
 enum typeOperation
 {
-    DEPOSIT = 2,
-    WITHDRAWAL =3,
-    BOTH = 4,
+    DEPOSIT = 3, // 2
+    WITHDRAWAL =4, // 3
+    BOTH = 5, //4
 };
 

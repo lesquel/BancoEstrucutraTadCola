@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <thread>
+#include <cstdlib> // Para system()
+
 #include "bankQueue.hpp"
 #include "bankTeller.hpp"
 #include "person.hpp"
@@ -15,14 +17,14 @@ private:
     BankQueue prioritaryQueue;           // Cola de clientes prioritarios (por ejemplo, ancianos)
     std::vector<BankTeller> bankTellers; // Vector que almacena los cajeros del banco
     std::mutex queueMutex;               // Mutex para controlar el acceso concurrente a las colas
-    int QUEUECAPACITY = 20;              // Capacidad máxima de las colas de clientes
+    int QUEUECAPACITY = 40;              // Capacidad máxima de las colas de clientes
 
 public:
     /**
      * Constructor de la clase Bank.
-     * 
+     *
      * @param bankName Nombre del banco.
-     * 
+     *
      * Este constructor inicializa las colas de clientes (normal y prioritaria)
      * y añade tres cajeros al banco, uno para depósitos, uno para retiros y uno
      * para ambos servicios (depósitos y retiros).
@@ -35,41 +37,11 @@ public:
         bankTellers.emplace_back(BankTeller("Deposito", DEPOSIT));  // Cajero especializado en depósitos
         bankTellers.emplace_back(BankTeller("Retiro", WITHDRAWAL)); // Cajero especializado en retiros
         bankTellers.emplace_back(BankTeller("Especial", BOTH));     // Cajero que maneja tanto depósitos como retiros
+        // bankTellers.emplace_back(BankTeller("Especial2", BOTH));     // Cajero que maneja tanto depósitos como retiros
     }
 
-<<<<<<< HEAD
-=======
-    /**
-     * Retorna la cola de clientes regulares.
-     * 
-     * @return BankQueue Cola de clientes normales.
-     */
-    BankQueue getNormalQueue()
-    {
-        return normalQueue;
-    }
-
-    /**
-     * Retorna la cola de clientes prioritarios.
-     * 
-     * @return BankQueue Cola de clientes prioritarios.
-     */
-    BankQueue getPrioritaryQueue()
-    {
-        return prioritaryQueue;
-    }
-
-    /**
-     * Añade un cliente a la cola adecuada.
-     * 
-     * @param client Cliente a añadir.
-     * 
-     * Si el cliente es anciano o tiene prioridad (usando `client.isElder()`),
-     * se añade a la cola prioritaria. De lo contrario, se añade a la cola normal.
-     */
->>>>>>> 4681fa29f86f199a1cd34b4bc5ef7d435f8c3e4e
     void addClient(Person client)
-    {   
+    {
         if (client.isElder())
         {
             prioritaryQueue.enqueue(client);
@@ -82,11 +54,11 @@ public:
 
     /**
      * Inicia el servicio de los cajeros.
-     * 
+     *
      * Este método maneja el proceso de atender a los clientes en paralelo mediante hilos.
      * Los cajeros atienden a los clientes, dando prioridad a la cola de clientes prioritarios.
      * Si la cola prioritaria está vacía, los cajeros atienden a los clientes de la cola normal.
-     * 
+     *
      * Se utiliza un mutex (`queueMutex`) para asegurar que solo un cajero acceda a una cola
      * al mismo tiempo, evitando condiciones de carrera. El proceso continúa hasta que todas
      * las colas están vacías y todos los clientes han sido atendidos.
@@ -98,27 +70,44 @@ public:
         // Mientras haya clientes en cualquiera de las colas
         while (!normalQueue.isEmpty() || !prioritaryQueue.isEmpty())
         {
-            // Asigna trabajo a cada cajero disponible
-            for (auto &teller : bankTellers)
+            threads.clear(); // Limpia el vector de hilos para el siguiente ciclo
+
+            // Atender a la cola prioritaria con la caja especial si hay clientes en la cola prioritaria
+            if (!prioritaryQueue.isEmpty())
             {
-                // Si la cola prioritaria no está vacía, asigna un cliente de esa cola
-                if (!prioritaryQueue.isEmpty())
-                    threads.emplace_back(std::thread(&BankTeller::serveClient, &teller, std::ref(prioritaryQueue), std::ref(queueMutex)));
-                else
-                {
-                    // Si la cola prioritaria está vacía, asigna un cliente de la cola normal
-                    threads.emplace_back(std::thread(&BankTeller::serveClient, &teller, std::ref(normalQueue), std::ref(queueMutex)));
-                }
+                threads.emplace_back(std::thread([this, &teller = bankTellers[2]]
+                                                 { teller.serveClient(prioritaryQueue, queueMutex); }));
             }
-            
+
+            // Atender a los clientes normales con los otros cajeros
+            for (size_t i = 0; i < bankTellers.size(); ++i)
+            {
+                if (i != 2) // Asegurarse de que no se use la caja especial para clientes normales
+                {
+                    // Si la cola normal está vacía, atiende de la cola prioritaria
+                    if (normalQueue.isEmpty() && !prioritaryQueue.isEmpty())
+                    {
+                        threads.emplace_back(std::thread([this, &teller = bankTellers[i]]
+                                                         { teller.serveClient(prioritaryQueue, queueMutex); }));
+                    }
+                    else if (!normalQueue.isEmpty()) // Si hay clientes normales, atiende de la cola normal
+                    {
+                        threads.emplace_back(std::thread([this, &teller = bankTellers[i]]
+                                                         { teller.serveClient(normalQueue, queueMutex); }));
+                    }
+                }
+
+            }
+
             // Espera a que todos los hilos terminen de atender a sus respectivos clientes
             for (auto &thread : threads)
             {
                 thread.join(); // Unir todos los hilos
             }
-            threads.clear(); // Limpia el vector de hilos para el siguiente ciclo
+
+            system("cls"); // Limpia la consola
         }
 
         std::cout << "Todos los clientes han sido atendidos." << std::endl;
-    };
+    }
 };
