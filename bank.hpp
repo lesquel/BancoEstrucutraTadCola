@@ -78,6 +78,12 @@ public:
                 threads.emplace_back(std::thread([this, &teller = bankTellers[2]]
                                                  { teller.serveClient(prioritaryQueue, queueMutex); }));
             }
+            else if (!normalQueue.isEmpty())
+            {
+                // Si la cola prioritaria está vacía, atiende de la cola normal
+                threads.emplace_back(std::thread([this, &teller = bankTellers[2]]
+                                                { teller.serveClient(normalQueue, queueMutex); }));
+            }
 
             // Atender a los clientes normales con los otros cajeros
             for (size_t i = 0; i < bankTellers.size(); ++i)
