@@ -7,6 +7,7 @@
 #include "bankQueue.hpp"
 #include "person.hpp"
 #include "typeOperation.hpp"
+#include "typeOperation.hpp"
 
 class BankTeller
 {
@@ -33,6 +34,17 @@ public:
     std::string getName() const { return banTellerName; }
 
     int getServiceTime() const { return operation; }
+
+
+    char typeOperationFunc() {
+        char s = 'B';  // Cambiamos por comillas simples para un `char`
+        if (operation == typeOperation::DEPOSIT) {
+            s = 'D';
+        } else if (operation == typeOperation::WITHDRAWAL) {
+            s = 'W';
+        }
+        return s;
+    }
 
     /**
      * Sirve a un cliente de la cola.
@@ -66,14 +78,18 @@ public:
             clientName = client.getName();
 
             // Verifica si el cliente es mayor para dar prioridad
-            if (client.isElder())
-            {
-                std::cout << "\nCliente " << clientName << " (Mayor) atendido en la caja " << banTellerName << std::endl;
+            if (client.isElder()) {
+                std::cout << "\n******************" << std::endl;
+                std::cout << "* " << banTellerName << " " << typeOperationFunc() 
+                        << " | " << clientName << " *" << std::endl;
+                std::cout << "******************" << std::endl;
+            } else {
+                std::cout << "\n******************" << std::endl;
+                std::cout << "* " << banTellerName << " " << typeOperationFunc() 
+                        << " | " << clientName << " *" << std::endl;
+                std::cout << "******************" << std::endl;
             }
-            else
-            {
-                std::cout << "\nCliente " << clientName << " atendido en la caja " << banTellerName << std::endl;
-            }
+
 
             // Mostrar tiempos de espera y transacción
 
@@ -85,7 +101,6 @@ public:
         // Actualizar el tiempo total de servicio del cajero
 
         // Separador visual en la consola
-        std::cout << "______________________________________________________" << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Ajustar según sea necesario
     }
 };

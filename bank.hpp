@@ -52,6 +52,29 @@ public:
         }
     }
 
+    void PrintPersons()
+    {
+        std::cout << "Priority Queue:" << std::endl;
+
+        // Crear una copia para no modificar la cola original
+        BankQueue tempQueue = prioritaryQueue;
+
+        while (!tempQueue.isEmpty())
+        {
+            Person person = tempQueue.dequeue(); // Extraer el elemento
+            std::cout << person.getName() << " ";
+        }
+
+        std::cout << "\n Normal Queue:" << std::endl;
+        tempQueue = normalQueue;
+        
+        while (!tempQueue.isEmpty())
+        {
+            Person person = tempQueue.dequeue(); // Extraer el elemento
+            std::cout << person.getName()<< " ";
+        }
+    }
+
     /**
      * Inicia el servicio de los cajeros.
      *
@@ -73,6 +96,9 @@ public:
             threads.clear(); // Limpia el vector de hilos para el siguiente ciclo
 
             // Atender a la cola prioritaria con la caja especial si hay clientes en la cola prioritaria
+
+            PrintPersons();
+
             if (!prioritaryQueue.isEmpty())
             {
                 threads.emplace_back(std::thread([this, &teller = bankTellers[2]]
@@ -82,7 +108,7 @@ public:
             {
                 // Si la cola prioritaria está vacía, atiende de la cola normal
                 threads.emplace_back(std::thread([this, &teller = bankTellers[2]]
-                                                { teller.serveClient(normalQueue, queueMutex); }));
+                                                 { teller.serveClient(normalQueue, queueMutex); }));
             }
 
             // Atender a los clientes normales con los otros cajeros
@@ -102,7 +128,6 @@ public:
                                                          { teller.serveClient(normalQueue, queueMutex); }));
                     }
                 }
-
             }
 
             // Espera a que todos los hilos terminen de atender a sus respectivos clientes
