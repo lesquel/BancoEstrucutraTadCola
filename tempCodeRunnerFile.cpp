@@ -1,2 +1,0 @@
-
-    bank.addClient(person2);

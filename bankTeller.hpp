@@ -7,7 +7,6 @@
 #include "bankQueue.hpp"
 #include "person.hpp"
 #include "typeOperation.hpp"
-#include "typeOperation.hpp"
 
 class BankTeller
 {
@@ -15,6 +14,8 @@ private:
     std::string banTellerName; // Nombre del cajero
     typeOperation operation;   // Tipo de operación que realiza el cajero (depósito, retiro o ambos)
     int serviceTime = 0;       // Tiempo total de servicio (se incrementa con cada transacción)
+    int numBankTellersReasignation;        // Mutex para controlar el acceso concurrente a las colas
+
 
 public:
     /**
@@ -44,6 +45,18 @@ public:
             s = 'W';
         }
         return s;
+    }
+
+    // convierte la caja en en otro tipo de operacion
+    void ConvertBankTellerType(typeOperation op){
+        numBankTellersReasignation++;
+        operation = op;
+    }
+
+    // Obtener el numero de veces que se cambio de caja - Bryan Steven Menoscal Santana
+
+    int getNumBankTellerreasgnation(){
+        return numBankTellersReasignation;
     }
 
     /**
@@ -103,4 +116,8 @@ public:
         // Separador visual en la consola
         std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Ajustar según sea necesario
     }
+
+
+
+    
 };
